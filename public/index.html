@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santa Lolla Foz | Catálogo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <button class="menu-toggle" id="menuToggle" aria-label="Menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="/" class="logo">
+                <img src="/img/logo.png" alt="Santa Lolla Foz" class="logo-img">
+            </a>
+            <div class="header-actions">
+                <button class="search-toggle" id="searchToggle" aria-label="Buscar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Barra de búsqueda -->
+        <div class="search-bar" id="searchBar">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Buscar bolsos..." autocomplete="off">
+                <button class="search-close" id="searchClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Lateral (Sidebar) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="/img/logo.png" alt="Santa Lolla Foz" class="sidebar-logo">
+            <button class="sidebar-close" id="sidebarClose" aria-label="Cerrar menú">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="sidebar-content">
+            <ul class="sidebar-menu">
+                <li><a href="/" class="sidebar-link active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Inicio
+                </a></li>
+                <li><a href="#catalogo" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Catálogo
+                </a></li>
+                <li><button class="sidebar-link sidebar-about-btn" id="sidebarAboutBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Quiénes Somos
+                </button></li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="https://wa.me/595981123456?text=Hola!%20Tengo%20una%20consulta" class="sidebar-whatsapp" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Contáctanos
+            </a>
+            <p class="sidebar-copyright">© 2026 Santa Lolla Foz</p>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">NUEVA COLECCIÓN</h1>
+            <p class="hero-subtitle">Elegancia y estilo en cada detalle</p>
+            <a href="#catalogo" class="hero-btn">Ver Catálogo</a>
+        </div>
+        <div class="hero-overlay"></div>
+    </section>
+
+    <!-- Catálogo de Productos -->
+    <section class="catalog" id="catalogo">
+        <div class="container">
+            <div class="catalog-header">
+                <h2 class="section-title">Nuestros Productos</h2>
+                <p class="products-count" id="productsCount">0 productos</p>
+            </div>
+            
+            <div class="products-grid" id="productsGrid">
+                <!-- Los productos se cargarán dinámicamente -->
+            </div>
+
+            <!-- Estado vacío -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <h3>No hay productos disponibles</h3>
+                <p>Pronto agregaremos nuevos productos a nuestro catálogo.</p>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Cargando productos...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Producto -->
+    <div class="modal" id="productModal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <div class="modal-body">
+                <!-- Galería de imágenes -->
+                <div class="modal-gallery">
+                    <div class="gallery-main">
+                        <img id="mainImage" src="" alt="Producto">
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs">
+                        <!-- Miniaturas se cargan dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Información del producto -->
+                <div class="modal-info">
+                    <h2 class="modal-title" id="modalTitle">Nombre del Producto</h2>
+                    <p class="modal-price" id="modalPrice">₲ 0</p>
+                    
+                    <!-- Selector de colores -->
+                    <div class="color-selector">
+                        <h4>Colores disponibles:</h4>
+                        <div class="color-options" id="colorOptions">
+                            <!-- Opciones de color se cargan dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div class="modal-description">
+                        <h4>Descripción</h4>
+                        <p id="modalDescription">Descripción del producto...</p>
+                    </div>
+
+                    <div class="modal-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Color seleccionado:</span>
+                            <span class="detail-value" id="selectedColor">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Quiénes Somos -->
+    <div class="modal-about" id="modalAbout">
+        <div class="modal-about-backdrop" id="modalAboutBackdrop"></div>
+        <div class="modal-about-content">
+            <button class="modal-about-close" id="modalAboutClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <div class="modal-about-body">
+                <img src="/img/logo.png" alt="Santa Lolla Foz" class="modal-about-logo">
+                <h2 class="modal-about-title">Quiénes Somos</h2>
+                
+                <div class="modal-about-badges">
+                    <span class="about-badge-item">+10 años</span>
+                    <span class="about-badge-item">3 tiendas</span>
+                    <span class="about-badge-item">Referencia en Foz</span>
+                </div>
+                
+                <p class="modal-about-text">
+                    <strong>Santa Lolla Foz</strong> es una marca consolidada con más de una década 
+                    de experiencia en el mercado de moda y accesorios. Somos referencia en 
+                    Foz do Iguaçu, Brasil, con 3 tiendas físicas que garantizan nuestra 
+                    calidad y compromiso con nuestros clientes.
+                </p>
+                
+                <p class="modal-about-text">
+                    Ofrecemos productos de alta calidad, diseños exclusivos y un servicio 
+                    excepcional que nos ha convertido en la elección preferida de miles 
+                    de clientes a lo largo de los años.
+                </p>
+                
+                <div class="modal-about-trust">
+                    <div class="trust-item">
+                        <span class="trust-icon">✨</span>
+                        <span>Calidad Premium</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="trust-icon">🏪</span>
+                        <span>3 Tiendas Físicas</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="trust-icon">💎</span>
+                        <span>Diseños Exclusivos</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="trust-icon">🤝</span>
+                        <span>Confianza Garantizada</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/595981123456?text=Hola!%20Vi%20un%20producto%20en%20el%20catálogo%20y%20me%20interesa" 
+       class="whatsapp-float" 
+       target="_blank" 
+       rel="noopener noreferrer"
+       aria-label="Contactar por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        <span class="whatsapp-tooltip">¿Consultas? ¡Escríbenos!</span>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer Top -->
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <img src="/img/logo.png" alt="Santa Lolla Foz" class="footer-logo">
+                </div>
+                
+                <div class="footer-info">
+                    <p class="footer-tagline">Más de una década siendo referencia en moda y accesorios</p>
+                    <div class="footer-trust">
+                        <div class="trust-item-footer">
+                            <span class="trust-number">+10</span>
+                            <span class="trust-label">Años</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-item-footer">
+                            <span class="trust-number">3</span>
+                            <span class="trust-label">Tiendas</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-item-footer">
+                            <span class="trust-number">Foz</span>
+                            <span class="trust-label">do Iguaçu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2026 Santa Lolla Foz. Todos los derechos reservados.</p>
+                <div class="footer-links">
+                    <button class="footer-link" id="footerAboutBtn">Quiénes Somos</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
+
