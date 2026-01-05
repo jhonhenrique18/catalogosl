@@ -581,21 +581,28 @@ img {
 
 .product-price {
     font-family: var(--font-body);
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--color-primary);
     letter-spacing: 0.01em;
     font-variant-numeric: lining-nums tabular-nums;
+    white-space: nowrap;
 }
 
 /* Responsive - Preço */
+@media (min-width: 400px) {
+    .product-price {
+        font-size: 1.1rem;
+    }
+}
+
 @media (min-width: 640px) {
     .product-name {
         font-size: 0.9rem;
     }
     
     .product-price {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 }
 
@@ -605,13 +612,13 @@ img {
     }
     
     .product-price {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 }
 
 @media (min-width: 1400px) {
     .product-price {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
 }
 
