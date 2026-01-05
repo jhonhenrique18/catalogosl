@@ -700,10 +700,35 @@ img {
     overflow: hidden;
     transform: translateY(20px) scale(0.98);
     transition: var(--transition-base);
+    overscroll-behavior: contain;
 }
 
 .modal.active .modal-content {
     transform: translateY(0) scale(1);
+}
+
+/* Mobile: modal em tela cheia */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+        transform: translateY(100%);
+    }
+    
+    .modal.active .modal-content {
+        transform: translateY(0);
+    }
+    
+    .modal-close {
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: var(--shadow-lg);
+    }
 }
 
 .modal-close {
@@ -741,20 +766,147 @@ img {
 .modal-gallery {
     background: var(--color-bg-alt);
     padding: var(--spacing-md);
+    touch-action: pan-y pinch-zoom;
 }
 
 .gallery-main {
+    position: relative;
     aspect-ratio: 1;
     background: var(--color-white);
     border-radius: var(--radius-md);
     overflow: hidden;
     margin-bottom: var(--spacing-md);
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
 }
 
 .gallery-main img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.gallery-main img.transitioning {
+    opacity: 0.5;
+}
+
+/* Setas de navegação - escondidas por padrão */
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--color-text);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    z-index: 5;
+}
+
+/* Só mostra quando o modal está ativo */
+.modal.active .gallery-nav {
+    display: flex;
+}
+
+.gallery-main:hover .gallery-nav {
+    opacity: 1;
+}
+
+.gallery-nav:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.gallery-nav:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.gallery-prev {
+    left: 8px;
+}
+
+.gallery-next {
+    right: 8px;
+}
+
+.gallery-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Indicadores de foto (bolinhas) - escondidos por padrão */
+.gallery-indicators {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 8px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    z-index: 5;
+}
+
+/* Só mostra quando o modal está ativo */
+.modal.active .gallery-indicators {
+    display: flex;
+}
+
+.gallery-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: var(--transition-fast);
+}
+
+.gallery-indicator.active {
+    background: var(--color-white);
+    transform: scale(1.2);
+}
+
+.gallery-indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Mobile: mostrar setas sempre */
+@media (max-width: 768px) {
+    .gallery-nav {
+        opacity: 1;
+        visibility: visible;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .gallery-prev {
+        left: 4px;
+    }
+    
+    .gallery-next {
+        right: 4px;
+    }
+    
+    .gallery-indicators {
+        bottom: 8px;
+        padding: 4px 10px;
+    }
+    
+    .gallery-indicator {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 .gallery-thumbs {
@@ -762,6 +914,12 @@ img {
     gap: var(--spacing-xs);
     overflow-x: auto;
     padding-bottom: var(--spacing-xs);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.gallery-thumbs::-webkit-scrollbar {
+    display: none;
 }
 
 .gallery-thumb {
@@ -783,6 +941,14 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* Mobile: thumbs maiores para melhor toque */
+@media (max-width: 768px) {
+    .gallery-thumb {
+        width: 56px;
+        height: 56px;
+    }
 }
 
 /* Modal Info */

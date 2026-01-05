@@ -26,6 +26,10 @@ const elements = {
     modalClose: document.getElementById('modalClose'),
     mainImage: document.getElementById('mainImage'),
     galleryThumbs: document.getElementById('galleryThumbs'),
+    galleryMain: document.getElementById('galleryMain'),
+    galleryPrev: document.getElementById('galleryPrev'),
+    galleryNext: document.getElementById('galleryNext'),
+    galleryIndicators: document.getElementById('galleryIndicators'),
     modalTitle: document.getElementById('modalTitle'),
     modalPrice: document.getElementById('modalPrice'),
     modalDescription: document.getElementById('modalDescription'),
@@ -44,6 +48,15 @@ const elements = {
     modalAboutClose: document.getElementById('modalAboutClose'),
     sidebarAboutBtn: document.getElementById('sidebarAboutBtn'),
     footerAboutBtn: document.getElementById('footerAboutBtn')
+};
+
+// Estado da galeria
+const galleryState = {
+    images: [],
+    currentIndex: 0,
+    touchStartX: 0,
+    touchEndX: 0,
+    isSwiping: false
 };
 
 // ========================================
@@ -366,25 +379,158 @@ function renderGalleryThumbs(variacion) {
         });
     }
     
+    // Guardar en estado de galería
+    galleryState.images = imagenes;
+    galleryState.currentIndex = 0;
+    
+    // Mostrar/ocultar navegación
+    const hasMultipleImages = imagenes.length > 1;
+    
+    if (elements.galleryPrev) {
+        elements.galleryPrev.style.display = hasMultipleImages ? 'flex' : 'none';
+    }
+    if (elements.galleryNext) {
+        elements.galleryNext.style.display = hasMultipleImages ? 'flex' : 'none';
+    }
+    
+    // Renderizar indicadores
+    if (elements.galleryIndicators) {
+        if (hasMultipleImages) {
+            elements.galleryIndicators.innerHTML = imagenes.map((_, index) => `
+                <button class="gallery-indicator ${index === 0 ? 'active' : ''}" data-index="${index}" aria-label="Foto ${index + 1}"></button>
+            `).join('');
+            elements.galleryIndicators.style.display = 'flex';
+            
+            // Event listeners para indicadores
+            elements.galleryIndicators.querySelectorAll('.gallery-indicator').forEach(indicator => {
+                indicator.addEventListener('click', () => {
+                    goToImage(parseInt(indicator.dataset.index));
+                });
+            });
+        } else {
+            elements.galleryIndicators.innerHTML = '';
+            elements.galleryIndicators.style.display = 'none';
+        }
+    }
+    
+    // Renderizar miniaturas
     if (imagenes.length <= 1) {
         elements.galleryThumbs.innerHTML = '';
         return;
     }
     
     elements.galleryThumbs.innerHTML = imagenes.map((img, index) => `
-        <button class="gallery-thumb ${index === 0 ? 'active' : ''}" data-src="${img.src}">
+        <button class="gallery-thumb ${index === 0 ? 'active' : ''}" data-src="${img.src}" data-index="${index}">
             <img src="${img.src}" alt="Vista ${index + 1}">
         </button>
     `).join('');
     
-    // Event listeners
+    // Event listeners para miniaturas
     elements.galleryThumbs.querySelectorAll('.gallery-thumb').forEach(thumb => {
         thumb.addEventListener('click', () => {
-            elements.mainImage.src = thumb.dataset.src;
-            elements.galleryThumbs.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
-            thumb.classList.add('active');
+            goToImage(parseInt(thumb.dataset.index));
         });
     });
+}
+
+// ========================================
+// NAVEGAÇÃO DA GALERIA
+// ========================================
+function goToImage(index) {
+    if (index < 0 || index >= galleryState.images.length) return;
+    
+    galleryState.currentIndex = index;
+    const img = galleryState.images[index];
+    
+    // Atualizar imagem principal
+    elements.mainImage.src = img.src;
+    
+    // Atualizar miniaturas ativas
+    elements.galleryThumbs.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+    });
+    
+    // Atualizar indicadores ativos
+    if (elements.galleryIndicators) {
+        elements.galleryIndicators.querySelectorAll('.gallery-indicator').forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        });
+    }
+    
+    // Scroll automático para miniatura visível
+    const activeThumb = elements.galleryThumbs.querySelector('.gallery-thumb.active');
+    if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+}
+
+function nextImage() {
+    const nextIndex = (galleryState.currentIndex + 1) % galleryState.images.length;
+    goToImage(nextIndex);
+}
+
+function prevImage() {
+    const prevIndex = galleryState.currentIndex === 0 
+        ? galleryState.images.length - 1 
+        : galleryState.currentIndex - 1;
+    goToImage(prevIndex);
+}
+
+// ========================================
+// TOUCH/SWIPE NA GALERIA
+// ========================================
+function initGallerySwipe() {
+    if (!elements.galleryMain) return;
+    
+    const minSwipeDistance = 50;
+    
+    elements.galleryMain.addEventListener('touchstart', (e) => {
+        galleryState.touchStartX = e.touches[0].clientX;
+        galleryState.isSwiping = true;
+    }, { passive: true });
+    
+    elements.galleryMain.addEventListener('touchmove', (e) => {
+        if (!galleryState.isSwiping) return;
+        galleryState.touchEndX = e.touches[0].clientX;
+    }, { passive: true });
+    
+    elements.galleryMain.addEventListener('touchend', () => {
+        if (!galleryState.isSwiping) return;
+        
+        const swipeDistance = galleryState.touchStartX - galleryState.touchEndX;
+        
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+            if (swipeDistance > 0) {
+                // Swipe para esquerda = próxima imagem
+                nextImage();
+            } else {
+                // Swipe para direita = imagem anterior
+                prevImage();
+            }
+        }
+        
+        galleryState.isSwiping = false;
+        galleryState.touchStartX = 0;
+        galleryState.touchEndX = 0;
+    }, { passive: true });
+    
+    // Prevenir scroll horizontal no modal durante swipe na galeria
+    elements.galleryMain.addEventListener('touchmove', (e) => {
+        if (galleryState.images.length > 1) {
+            // Só previne se tiver múltiplas imagens e o swipe for horizontal
+            const deltaX = Math.abs(galleryState.touchStartX - e.touches[0].clientX);
+            const deltaY = Math.abs(e.touches[0].clientY - (galleryState.touchStartY || e.touches[0].clientY));
+            
+            if (deltaX > deltaY && deltaX > 10) {
+                e.preventDefault();
+            }
+        }
+    }, { passive: false });
+    
+    // Guardar Y inicial para detectar direção do swipe
+    elements.galleryMain.addEventListener('touchstart', (e) => {
+        galleryState.touchStartY = e.touches[0].clientY;
+    }, { passive: true });
 }
 
 function closeModal() {
@@ -524,6 +670,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal
     elements.modalClose?.addEventListener('click', closeModal);
     elements.modalBackdrop?.addEventListener('click', closeModal);
+    
+    // Navegação da galeria
+    elements.galleryPrev?.addEventListener('click', prevImage);
+    elements.galleryNext?.addEventListener('click', nextImage);
+    
+    // Inicializar swipe na galeria
+    initGallerySwipe();
+    
+    // Teclado para navegar imagens
+    document.addEventListener('keydown', (e) => {
+        if (elements.modal.classList.contains('active')) {
+            if (e.key === 'ArrowLeft') {
+                prevImage();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            }
+        }
+    });
     
     // Modal About - Quiénes Somos
     elements.sidebarAboutBtn?.addEventListener('click', openAboutModal);

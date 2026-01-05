@@ -148,8 +148,21 @@
             <div class="modal-body">
                 <!-- Galería de imágenes -->
                 <div class="modal-gallery">
-                    <div class="gallery-main">
+                    <div class="gallery-main" id="galleryMain">
                         <img id="mainImage" src="" alt="Producto">
+                        <!-- Setas de navegação -->
+                        <button class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Foto anterior">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"></path>
+                            </svg>
+                        </button>
+                        <button class="gallery-nav gallery-next" id="galleryNext" aria-label="Próxima foto">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"></path>
+                            </svg>
+                        </button>
+                        <!-- Indicadores de foto -->
+                        <div class="gallery-indicators" id="galleryIndicators"></div>
                     </div>
                     <div class="gallery-thumbs" id="galleryThumbs">
                         <!-- Miniaturas se cargan dinámicamente -->
