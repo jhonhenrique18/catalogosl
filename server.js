@@ -78,6 +78,9 @@ app.get('/img/capa-desktop.webp', (req, res) => {
     }
 });
 
+// Trust proxy para Railway/Heroku (necessário para cookies seguros atrás de proxy)
+app.set('trust proxy', 1);
+
 // Sesiones
 app.use(session({
     secret: process.env.SESSION_SECRET || 'catalogo-bolsas-secret-key-2024',
@@ -85,6 +88,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 24 * 60 * 60 * 1000 // 24 horas
     }
 }));
