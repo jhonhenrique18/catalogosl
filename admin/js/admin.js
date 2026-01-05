@@ -495,30 +495,44 @@ async function saveProduct() {
             for (const oldVar of oldVariaciones) {
                 if (!currentDbIds.includes(oldVar.id)) {
                     console.log('Eliminando variación antigua:', oldVar.id);
-                    await fetch(`/api/admin/variaciones/${oldVar.id}`, { method: 'DELETE' });
+                    await fetch(`/api/admin/variaciones/${oldVar.id}`, { method: 'DELETE', credentials: 'include' });
                 }
             }
         }
         
         // Guardar cada color
         let variacionesCreadas = 0;
+        let erroresVariacion = [];
+        
         for (const color of coloresValidos) {
             try {
+                console.log('Procesando color:', color.color, 'con', color.imagenes?.length || 0, 'imágenes');
+                
                 if (color.dbId) {
                     await updateVariacion(color);
                     variacionesCreadas++;
                 } else {
-                    await createVariacion(finalProductoId, color);
-                    variacionesCreadas++;
+                    const resultado = await createVariacion(finalProductoId, color);
+                    if (resultado && resultado.id) {
+                        variacionesCreadas++;
+                    } else {
+                        erroresVariacion.push(`Color "${color.color}": No se pudo crear`);
+                    }
                 }
             } catch (varError) {
                 console.error('Error en variación:', varError);
+                erroresVariacion.push(`Color "${color.color}": ${varError.message}`);
             }
         }
         
         console.log('Variaciones creadas/actualizadas:', variacionesCreadas);
+        console.log('Errores:', erroresVariacion);
         
-        showToast(isEdit ? 'Producto actualizado' : 'Producto creado con ' + variacionesCreadas + ' color(es)', 'success');
+        if (erroresVariacion.length > 0) {
+            showToast('Producto creado pero con errores en colores: ' + erroresVariacion.join(', '), 'error');
+        } else {
+            showToast(isEdit ? 'Producto actualizado' : 'Producto creado con ' + variacionesCreadas + ' color(es)', 'success');
+        }
         closeModal();
         await loadProducts();
         
