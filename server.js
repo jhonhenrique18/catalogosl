@@ -106,18 +106,27 @@ function saveDatabase() {
 // Helpers para queries
 function dbRun(sql, params = []) {
     try {
-        db.run(sql, params);
-        saveDatabase();
+        // Ejecutar la query
+        const stmt = db.prepare(sql);
+        stmt.bind(params);
+        stmt.step();
+        stmt.free();
         
-        // Obtener el último ID insertado de forma correcta
+        // Obtener el último ID insertado
         const result = db.exec("SELECT last_insert_rowid() as id");
         const lastID = result[0]?.values[0]?.[0] || 0;
         
+        // Guardar en disco
+        saveDatabase();
+        
+        console.log('dbRun - SQL:', sql.substring(0, 50) + '...');
         console.log('dbRun - last_insert_rowid:', lastID);
         
         return { lastID: lastID };
     } catch (error) {
         console.error('DB Run Error:', error);
+        console.error('SQL:', sql);
+        console.error('Params:', params);
         throw error;
     }
 }
@@ -436,12 +445,24 @@ app.get('/api/admin/productos', requireAuth, (req, res) => {
 // Crear producto
 app.post('/api/admin/productos', requireAuth, (req, res) => {
     try {
+        console.log('=== CREAR PRODUCTO ===');
+        console.log('Body recibido:', req.body);
+        
         const { nombre, descripcion, precio, categoria } = req.body;
+        
+        console.log('Datos procesados:', { nombre, descripcion, precio, categoria });
         
         const result = dbRun(`
             INSERT INTO productos (nombre, descripcion, precio, categoria)
             VALUES (?, ?, ?, ?)
         `, [nombre, descripcion || '', precio, categoria || 'Bolsa']);
+
+        console.log('Resultado INSERT:', result);
+        console.log('ID del nuevo producto:', result.lastID);
+
+        // Verificar que se creó correctamente
+        const nuevoProducto = dbGet('SELECT * FROM productos WHERE id = ?', [result.lastID]);
+        console.log('Verificación - Nuevo producto:', nuevoProducto);
 
         res.json({ 
             success: true, 
@@ -517,27 +538,41 @@ app.post('/api/admin/variaciones', requireAuth, upload.single('imagen'), (req, r
     try {
         console.log('=== CREAR VARIACIÓN ===');
         console.log('Body:', req.body);
-        console.log('File:', req.file);
+        console.log('File:', req.file ? { filename: req.file.filename, size: req.file.size } : 'NO FILE');
         
         const { producto_id, color, stock } = req.body;
         const imagen = req.file ? req.file.filename : null;
 
-        console.log('Datos procesados:', { producto_id, color, imagen, stock });
+        const prodId = parseInt(producto_id);
+        console.log('Datos procesados:', { producto_id: prodId, color, imagen, stock });
 
-        if (!producto_id) {
-            return res.status(400).json({ error: 'producto_id es requerido' });
+        if (!prodId || prodId <= 0) {
+            console.error('ERROR: producto_id inválido:', producto_id);
+            return res.status(400).json({ error: 'producto_id es requerido y debe ser válido' });
         }
 
-        if (!color) {
+        if (!color || color.trim() === '') {
+            console.error('ERROR: color inválido:', color);
             return res.status(400).json({ error: 'color es requerido' });
+        }
+
+        // Verificar que el producto existe
+        const producto = dbGet('SELECT id FROM productos WHERE id = ?', [prodId]);
+        if (!producto) {
+            console.error('ERROR: Producto no existe:', prodId);
+            return res.status(400).json({ error: 'El producto no existe' });
         }
 
         const result = dbRun(`
             INSERT INTO variaciones (producto_id, color, imagen, stock)
             VALUES (?, ?, ?, ?)
-        `, [parseInt(producto_id), color, imagen, parseInt(stock) || 0]);
+        `, [prodId, color.trim(), imagen, parseInt(stock) || 0]);
 
         console.log('Variación creada con ID:', result.lastID);
+
+        // Verificar que se creó correctamente
+        const nuevaVariacion = dbGet('SELECT * FROM variaciones WHERE id = ?', [result.lastID]);
+        console.log('Verificación - Nueva variación:', nuevaVariacion);
 
         res.json({ 
             success: true, 

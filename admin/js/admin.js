@@ -42,7 +42,7 @@ function setupEventListeners() {
 // ========================================
 async function checkAuth() {
     try {
-        const res = await fetch('/api/auth/check');
+        const res = await fetch('/api/auth/check', { credentials: 'include' });
         const data = await res.json();
         if (!data.authenticated) {
             window.location.href = '/admin/login';
@@ -55,7 +55,7 @@ async function checkAuth() {
 }
 
 async function logout() {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     window.location.href = '/admin/login';
 }
 
@@ -65,7 +65,7 @@ async function logout() {
 async function loadProducts() {
     showLoading(true);
     try {
-        const res = await fetch('/api/admin/productos');
+        const res = await fetch('/api/admin/productos', { credentials: 'include' });
         state.productos = await res.json();
         renderProducts();
     } catch (e) {
@@ -465,17 +465,27 @@ async function saveProduct() {
             {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productoData)
+                body: JSON.stringify(productoData),
+                credentials: 'include'  // Importante para enviar cookies
             }
         );
         
         const result = await res.json();
         console.log('Respuesta producto:', result);
+        console.log('Status HTTP:', res.status);
         
-        if (!res.ok) throw new Error(result.error || 'Error al guardar producto');
+        if (!res.ok) {
+            console.error('Error HTTP:', res.status, result);
+            throw new Error(result.error || 'Error al guardar producto');
+        }
         
         const finalProductoId = isEdit ? parseInt(productoId) : result.id;
         console.log('ID del producto:', finalProductoId);
+        
+        if (!finalProductoId || finalProductoId <= 0) {
+            console.error('ID de producto inválido recibido:', result);
+            throw new Error('No se pudo obtener el ID del producto');
+        }
         
         // Eliminar variaciones antiguas si es edición
         if (isEdit && state.productoActual) {
@@ -566,7 +576,8 @@ async function createVariacion(productoId, color) {
     
     const res = await fetch('/api/admin/variaciones', {
         method: 'POST',
-        body: formData
+        body: formData,
+        credentials: 'include'  // Importante para enviar cookies
     });
     
     const result = await res.json();
@@ -588,7 +599,8 @@ async function createVariacion(productoId, color) {
             
             const galeriaRes = await fetch(`/api/admin/variaciones/${result.id}/galeria`, {
                 method: 'POST',
-                body: galeriaForm
+                body: galeriaForm,
+                credentials: 'include'
             });
             
             const galeriaResult = await galeriaRes.json();
@@ -613,7 +625,8 @@ async function updateVariacion(color) {
     
     await fetch(`/api/admin/variaciones/${color.dbId}`, {
         method: 'PUT',
-        body: formData
+        body: formData,
+        credentials: 'include'
     });
     
     // Subir nuevas imágenes adicionales
@@ -623,7 +636,8 @@ async function updateVariacion(color) {
         galeriaForm.append('imagen', img.file);
         await fetch(`/api/admin/variaciones/${color.dbId}/galeria`, {
             method: 'POST',
-            body: galeriaForm
+            body: galeriaForm,
+            credentials: 'include'
         });
     }
 }
@@ -638,7 +652,7 @@ async function deleteProduct() {
     if (!confirm('¿Eliminar este producto y todas sus fotos?')) return;
     
     try {
-        const res = await fetch(`/api/admin/productos/${productoId}`, { method: 'DELETE' });
+        const res = await fetch(`/api/admin/productos/${productoId}`, { method: 'DELETE', credentials: 'include' });
         if (!res.ok) throw new Error('Error al eliminar');
         
         showToast('Producto eliminado', 'success');
