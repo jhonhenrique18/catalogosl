@@ -59,63 +59,86 @@ function formatPrice(precio) {
 // ========================================
 function getColorHex(colorName) {
     const colors = {
+        // Preto/Negro
         'negro': '#1a1a1a',
         'preto': '#1a1a1a',
         'black': '#1a1a1a',
-        'blanco': '#ffffff',
-        'branco': '#ffffff',
-        'white': '#ffffff',
+        // Branco
+        'blanco': '#f5f5f5',
+        'branco': '#f5f5f5',
+        'white': '#f5f5f5',
+        // Marrom
         'marron': '#8B4513',
         'marrón': '#8B4513',
         'marrom': '#8B4513',
         'brown': '#8B4513',
+        'caramelo': '#C68E17',
+        // Café
         'cafe': '#6F4E37',
         'café': '#6F4E37',
-        'beige': '#F5F5DC',
-        'bege': '#F5F5DC',
-        'crema': '#FFFDD0',
-        'cream': '#FFFDD0',
+        // Bege (mais escuro para ser visível)
+        'beige': '#C4A77D',
+        'bege': '#C4A77D',
+        // Crema
+        'crema': '#D4C4A8',
+        'cream': '#D4C4A8',
+        // Vermelho
         'rojo': '#C41E3A',
         'vermelho': '#C41E3A',
         'red': '#C41E3A',
+        // Azul
         'azul': '#1E3A8A',
         'blue': '#1E3A8A',
+        // Verde
         'verde': '#228B22',
         'green': '#228B22',
-        'rosa': '#FFC0CB',
+        // Rosa
+        'rosa': '#E8A0B0',
         'rose': '#E8B4B8',
-        'pink': '#FFC0CB',
-        'gris': '#808080',
-        'cinza': '#808080',
-        'gray': '#808080',
-        'dorado': '#FFD700',
-        'dourado': '#FFD700',
-        'gold': '#FFD700',
-        'plateado': '#C0C0C0',
-        'prata': '#C0C0C0',
-        'silver': '#C0C0C0',
+        'pink': '#E8A0B0',
+        // Cinza (mais escuro para ser visível)
+        'gris': '#6B7280',
+        'cinza': '#6B7280',
+        'gray': '#6B7280',
+        'grey': '#6B7280',
+        'stone': '#78716C',
+        'fog': '#9CA3AF',
+        // Dourado
+        'dorado': '#DAA520',
+        'dourado': '#DAA520',
+        'gold': '#DAA520',
+        // Prata
+        'plateado': '#A8A9AD',
+        'prata': '#A8A9AD',
+        'silver': '#A8A9AD',
+        // Laranja
         'naranja': '#FF8C00',
         'laranja': '#FF8C00',
         'orange': '#FF8C00',
-        'amarillo': '#FFD700',
-        'amarelo': '#FFD700',
-        'yellow': '#FFD700',
+        // Amarelo
+        'amarillo': '#F4D03F',
+        'amarelo': '#F4D03F',
+        'yellow': '#F4D03F',
+        // Roxo
         'morado': '#800080',
         'roxo': '#800080',
         'purple': '#800080',
+        // Bordô
         'bordo': '#800020',
         'burgundy': '#800020',
+        'vinho': '#722F37',
+        // Tons neutros
         'camel': '#C19A6B',
         'tan': '#D2B48C',
-        'nude': '#E3BC9A',
+        'nude': '#D4A574',
         'coral': '#FF7F50',
         'turquesa': '#40E0D0',
-        'off white': '#FAF9F6',
-        'offwhite': '#FAF9F6'
+        'off white': '#E8E4DF',
+        'offwhite': '#E8E4DF'
     };
     
     const lowerColor = colorName.toLowerCase().trim();
-    return colors[lowerColor] || '#cccccc';
+    return colors[lowerColor] || '#9CA3AF';
 }
 
 // ========================================
@@ -128,7 +151,10 @@ async function loadProducts() {
         const response = await fetch('/api/productos');
         if (!response.ok) throw new Error('Error al cargar productos');
         
-        state.productos = await response.json();
+        const productos = await response.json();
+        
+        // Ordenar por precio: más barato primero
+        state.productos = productos.sort((a, b) => a.precio - b.precio);
         state.productosFiltrados = [...state.productos];
         
         renderProducts();

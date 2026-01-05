@@ -1160,24 +1160,12 @@ img {
 
 .trust-number {
     font-family: var(--font-body);
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--color-secondary);
     line-height: 1;
-    font-variant-numeric: lining-nums tabular-nums;
     letter-spacing: 0.01em;
-}
-
-@media (min-width: 640px) {
-    .trust-number {
-        font-size: 1.8rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .trust-number {
-        font-size: 2rem;
-    }
+    font-variant-numeric: lining-nums tabular-nums;
 }
 
 .trust-label {
