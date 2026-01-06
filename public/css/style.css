@@ -174,7 +174,7 @@ img {
 }
 
 .logo-img {
-    width: 160px;
+    width: 120px;
     height: auto;
     object-fit: contain;
     transition: var(--transition-base);
@@ -182,31 +182,31 @@ img {
 
 @media (min-width: 400px) {
     .logo-img {
-        width: 180px;
+        width: 140px;
     }
 }
 
 @media (min-width: 640px) {
     .logo-img {
-        width: 220px;
+        width: 160px;
     }
 }
 
 @media (min-width: 900px) {
     .logo-img {
-        width: 280px;
+        width: 180px;
     }
 }
 
 @media (min-width: 1200px) {
     .logo-img {
-        width: 340px;
+        width: 200px;
     }
 }
 
 @media (min-width: 1600px) {
     .logo-img {
-        width: 400px;
+        width: 220px;
     }
 }
 
